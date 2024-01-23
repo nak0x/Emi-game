@@ -1,54 +1,75 @@
 extends CharacterBody2D
 
-@export var SPEED = 500.0
-@export var JUMP_VELOCITY = -400.0
-@export var dash_factor = 2.0
-@export var max_jumps = 2
-@export var spell_duration = 150
+@export var SPEED : float = 150.0
+@export var GRAVITY : float = 981
+@export var JUMP_FORCE : float = 250.0
+@export var DASH_FACTOR : float = 1.5
+@export var SPELL_DURATION : float = .5
+@export var JUMPS_AMOUNT : int = 2
 
-# Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+@onready var _animation_controller = $Sprite
+@onready var _JumpSfx = $JumpSfx
+@onready var _DashSfx = $DashSfx
 
-# Double jump counter
-var jumps = 0
-var instant_speed = SPEED
-var spell_cast = 0
+# Reset de player position when fired
+func game_over():
+	position.x = 0
+	position.y = 0
+	
+var jumps_counter = 0
 var is_spell_casting = false
+var spell_delta = 0
 
 func _physics_process(delta):
-	# Reset spells effect is aplicable
-	if spell_cast == spell_duration:
-		spell_cast = 0
-		is_spell_casting=false
-		instant_speed = SPEED
 	
-	# Add the gravity.
-	if not is_on_floor():
-		velocity.y += gravity * delta
-
-	# Handle jump.
+	var current_speed = SPEED
+	
+	# Reset counter
 	if is_on_floor():
-		jumps = 0
+		jumps_counter = 0
 	
-	if Input.is_action_just_pressed("jump") and jumps < max_jumps:
-		jumps+=1
-		velocity.y = JUMP_VELOCITY + jumps * 10
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	if is_spell_casting:
-		spell_cast+=1
-	
+	# Aply gravity
+	if !is_on_floor():
+		velocity.y += GRAVITY * delta
+		
+	# use spells
 	if Input.is_action_just_pressed("spell1") and !is_spell_casting:
-		is_spell_casting=true
-		instant_speed *= dash_factor
+		is_spell_casting = true
+		_DashSfx.play()
 	
+	if is_spell_casting:
+		spell_delta+=delta
+		
+	if spell_delta >= SPELL_DURATION:
+		is_spell_casting = false
+		spell_delta = 0
+		
+	if is_spell_casting:
+		current_speed = SPEED * DASH_FACTOR
+	
+	# Get mouvement
 	var direction = Input.get_axis("move_left", "move_right")
 	if direction:
-		velocity.x = direction * instant_speed
+		velocity.x = direction * current_speed
 	else:
-		velocity.x = move_toward(velocity.x, 0, instant_speed)
-
-	print(instant_speed, " ", spell_cast, " ", is_spell_casting, " ", jumps)
-
+		velocity.x = move_toward(velocity.x, 0, current_speed)
+	
+	if Input.is_action_just_pressed("jump") and jumps_counter < JUMPS_AMOUNT:
+		velocity.y -= JUMP_FORCE
+		_JumpSfx.play()
+	
+	# Control animations
+	if Input.is_action_just_pressed("move_left"):
+		_animation_controller.flip_h = true
+		_animation_controller.play("walk")
+	elif Input.is_action_just_pressed("move_right"):
+		_animation_controller.flip_h = false
+		_animation_controller.play("walk")
+	elif Input.is_action_just_pressed("jump") and jumps_counter < JUMPS_AMOUNT:
+		jumps_counter+=1
+		_animation_controller.play("jump")
+	else:
+		_animation_controller.play("idle")
+		
+	# Run the movements
 	move_and_slide()

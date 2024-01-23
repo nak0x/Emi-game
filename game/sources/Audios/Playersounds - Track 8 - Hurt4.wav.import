@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dury2x2d6mnqb"
+path="res://.godot/imported/Playersounds - Track 8 - Hurt4.wav-17e2d1951509af3e16432d3c4b0c2c3c.sample"
+
+[deps]
+
+source_file="res://sources/Audios/Playersounds - Track 8 - Hurt4.wav"
+dest_files=["res://.godot/imported/Playersounds - Track 8 - Hurt4.wav-17e2d1951509af3e16432d3c4b0c2c3c.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

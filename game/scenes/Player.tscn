@@ -1,20 +1,145 @@
-[gd_scene load_steps=4 format=3 uid="uid://cxqsbf1fb7cxc"]
+[gd_scene load_steps=18 format=3 uid="uid://cxqsbf1fb7cxc"]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_1shp3"]
-[ext_resource type="Texture2D" uid="uid://bxokfbqoj47jo" path="res://icon.svg" id="1_5546r"]
+[ext_resource type="Texture2D" uid="uid://ccyp73xyjq4ip" path="res://sources/characters.png" id="2_eqce7"]
+[ext_resource type="AudioStream" uid="uid://rqyhubxso5jb" path="res://sources/Audios/Playersounds - Track 10 - Jump2.wav" id="3_ix6ig"]
+[ext_resource type="AudioStream" uid="uid://cqhi8itrw6kv2" path="res://sources/Audios/swosh-39.wav" id="4_3flto"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2msoe"]
+atlas = ExtResource("2_eqce7")
+region = Rect2(224, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wyurw"]
+atlas = ExtResource("2_eqce7")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5ws4u"]
+atlas = ExtResource("2_eqce7")
+region = Rect2(128, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1r4xv"]
+atlas = ExtResource("2_eqce7")
+region = Rect2(160, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n1nrf"]
+atlas = ExtResource("2_eqce7")
+region = Rect2(192, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bm7gh"]
+atlas = ExtResource("2_eqce7")
+region = Rect2(224, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iq5k6"]
+atlas = ExtResource("2_eqce7")
+region = Rect2(256, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ga0h7"]
+atlas = ExtResource("2_eqce7")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q3fnh"]
+atlas = ExtResource("2_eqce7")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s3rgb"]
+atlas = ExtResource("2_eqce7")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1tc4o"]
+atlas = ExtResource("2_eqce7")
+region = Rect2(96, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ii82q"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2msoe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wyurw")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5ws4u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1r4xv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n1nrf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bm7gh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iq5k6")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ga0h7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q3fnh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s3rgb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1tc4o")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wyovr"]
-radius = 43.0
-height = 154.0
+height = 30.5
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[node name="CharacterBody2D" type="CharacterBody2D" groups=["Player"]]
 script = ExtResource("1_1shp3")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0.5, -77)
-scale = Vector2(0.664063, 1.1875)
-texture = ExtResource("1_5546r")
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -21)
+scale = Vector2(1.29802, 1.32251)
+sprite_frames = SubResource("SpriteFrames_ii82q")
+animation = &"walk"
+frame_progress = 0.25482
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -77)
+[node name="Collider" type="CollisionShape2D" parent="."]
+position = Vector2(0, -15)
 shape = SubResource("CapsuleShape2D_wyovr")
+
+[node name="Main view" type="Camera2D" parent="."]
+offset = Vector2(0, -50)
+zoom = Vector2(4, 4)
+limit_smoothed = true
+position_smoothing_enabled = true
+drag_horizontal_enabled = true
+drag_left_margin = 0.22
+drag_top_margin = 0.23
+drag_right_margin = 0.23
+drag_bottom_margin = 0.37
+editor_draw_limits = true
+editor_draw_drag_margin = true
+
+[node name="Ears" type="AudioListener2D" parent="."]
+current = true
+
+[node name="JumpSfx" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_ix6ig")
+volume_db = -8.0
+
+[node name="DashSfx" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_3flto")
+volume_db = -8.0
+
+[connection signal="animation_changed" from="Sprite" to="." method="_on_sprite_animation_changed"]
